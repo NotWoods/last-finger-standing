@@ -1,0 +1,41 @@
+.landing {
+  display: grid;
+  grid-template-columns: 2fr 50ch 345px 2fr;
+  grid-template-rows: auto;
+  grid-template-areas: ". text image .";
+}
+
+@media (max-width: 800px) {
+  .landing {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    grid-template-areas: "text" "image";
+    justify-content: center;
+  }
+}
+
+article {
+  padding-inline: 1rem;
+  max-width: 50ch;
+  font-size: 1.25em;
+  grid-area: text;
+  align-self: center;
+}
+
+.phone-figure {
+  grid-area: image;
+  max-width: 40ch;
+  position: relative;
+}
+.phone-frame {
+  max-width: 100%;
+  height: auto;
+  position: relative;
+  z-index: 1;
+}
+.phone-screenshot {
+  position: absolute;
+  max-width: 80%;
+  top: 8%;
+  left: 10%;
+}

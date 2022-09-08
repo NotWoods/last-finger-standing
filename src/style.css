@@ -26,14 +26,16 @@ header {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  row-gap: 8px;
-  min-height: 40px;
+  row-gap: 0.5em;
+  min-height: 2.5em;
   padding-block: 0;
-  padding-inline-start: 16px;
-  padding-inline-end: 24px;
+  padding-inline-start: 1em;
+  padding-inline-end: 1.5em;
   font-weight: 500;
   color: #e8def8;
   background-color: #4a4458;
+  text-decoration: none;
+  text-align: center;
 }
 .icon-button::after {
   content: "";
@@ -56,10 +58,10 @@ header {
 .fullscreen-button::before {
   content: "";
   display: block;
-  width: 24px;
-  height: 24px;
+  width: 1.5em;
+  height: 1.5em;
   background: url("/fullscreen.svg") no-repeat;
-  background-size: 48px 24px;
+  background-size: 2em 1.5em;
   background-position: right center;
 }
 .fullscreen-button:fullscreen::before,
