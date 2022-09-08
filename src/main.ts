@@ -104,6 +104,7 @@ class TouchPicker {
 
   pick = () => {
     this.picked = this.touchList[randomIndex(this.touchList.length)];
+    navigator.vibrate(100);
     console.log("Picked", this.picked.identifier);
   };
 
