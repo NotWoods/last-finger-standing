@@ -2,6 +2,14 @@ import "./style.css";
 import "./animation.css";
 import { colors } from "./colors";
 
+/**
+ * Returns a random integer between 0 (included) and length (excluded).
+ * Good for picking an index in an array.
+ */
+function randomIndex(length: number) {
+  return Math.floor(Math.random() * length);
+}
+
 const arena = document.getElementById("arena")!;
 
 interface Indicator {
@@ -40,15 +48,15 @@ class TouchIndicator {
 
 class IndicatorManager {
   indicators = new Map<number, TouchIndicator>();
-  i = 0;
+  pickedId: number | undefined;
+  pickedIndicator: TouchIndicator | undefined;
 
   getOrCreateIndicator(identifier: number) {
     return this.indicators.get(identifier) ?? this.addIndicator(identifier);
   }
 
   addIndicator(identifier: number) {
-    const indicator = new TouchIndicator(colors[this.i % colors.length]);
-    this.i++;
+    const indicator = new TouchIndicator(colors[randomIndex(colors.length)]);
 
     this.indicators.set(identifier, indicator);
     arena.append(indicator.element);
@@ -66,14 +74,65 @@ class IndicatorManager {
   }
 }
 
-let touchList: ArrayLike<Touch> = [];
+class TouchPicker {
+  touchList: ArrayLike<Touch> = [];
+  picked: Touch | undefined;
+
+  private pickTimeoutId: number | undefined;
+  private resetTimeoutId: number | undefined;
+
+  /**
+   * Update the list of fingers to display.
+   */
+  updateList(touchList: ArrayLike<Touch>) {
+    this.touchList = touchList;
+  }
+
+  /**
+   * Returns an interator over the touch list.
+   * Alters the displayed list of fingers to highlight the picked one.
+   */
+  *touchesToDisplay() {
+    if (this.picked) {
+      yield this.picked;
+    } else {
+      for (let i = 0; i < this.touchList.length; i++) {
+        yield this.touchList[i];
+      }
+    }
+  }
+
+  pick = () => {
+    this.picked = this.touchList[randomIndex(this.touchList.length)];
+    console.log("Picked", this.picked.identifier);
+  };
+
+  reset = () => {
+    this.picked = undefined;
+    console.log("Reset");
+  };
+
+  resetTimers() {
+    clearTimeout(this.pickTimeoutId);
+    clearTimeout(this.resetTimeoutId);
+
+    if (this.touchList.length > 1) {
+      // Automatically pick a finger after 2 seconds
+      this.pickTimeoutId = setTimeout(this.pick, 2000);
+    } else if (this.picked && this.touchList.length === 0) {
+      // If all the fingers have been removed, reset the picked finger after 2 seconds
+      this.resetTimeoutId = setTimeout(this.reset, 2000);
+    }
+  }
+}
+
+const picker = new TouchPicker();
 {
   const manager = new IndicatorManager();
+
   function renderTouches() {
     const notSeen = new Set(manager.indicators.keys());
-    for (let i = 0; i < touchList.length; i++) {
-      const touch = touchList[i];
-
+    for (const touch of picker.touchesToDisplay()) {
       manager.getOrCreateIndicator(touch.identifier).updatePosition(touch);
       notSeen.delete(touch.identifier);
     }
@@ -89,9 +148,13 @@ let touchList: ArrayLike<Touch> = [];
 
 function updateAllTouches(event: TouchEvent) {
   event.preventDefault();
-  touchList = event.targetTouches;
+  picker.updateList(event.targetTouches);
+}
+function addOrRemoveTouch(event: TouchEvent) {
+  updateAllTouches(event);
+  picker.resetTimers();
 }
 
-arena.addEventListener("touchstart", updateAllTouches);
 arena.addEventListener("touchmove", updateAllTouches);
-arena.addEventListener("touchend", updateAllTouches);
+arena.addEventListener("touchstart", addOrRemoveTouch);
+arena.addEventListener("touchend", addOrRemoveTouch);

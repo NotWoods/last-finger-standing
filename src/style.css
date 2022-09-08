@@ -7,30 +7,41 @@
   color-scheme: dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #000;
-  overflow: clip;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
 }
 
 body {
   margin: 0;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 header {
   position: fixed;
 }
 
-#app,
-#arena {
-  overflow: clip;
-  width: 100%;
-  height: 100%;
+.icon-button {
+  border: 0;
+  border-radius: 1000px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  row-gap: 8px;
+  min-height: 40px;
+  padding-left: 16px;
+  padding-right: 24px;
+  font-weight: 500;
+}
+
+.fullscreen-button::before {
+  content: "";
+  display: block;
+  width: 24px;
+  height: 24px;
+  background: url("/fullscreen.svg") no-repeat;
+  background-size: 48px 24px;
+  background-position: right center;
+}
+.fullscreen-button::before:fullscreen {
+  background-position: left center;
 }
