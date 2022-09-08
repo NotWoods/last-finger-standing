@@ -1,4 +1,5 @@
 import { defineConfig } from "vite";
+import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
   server: {
@@ -12,4 +13,5 @@ export default defineConfig({
       },
     },
   },
+  plugins: [VitePWA({ registerType: "autoUpdate", manifest: false })],
 });

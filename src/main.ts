@@ -78,8 +78,8 @@ class TouchPicker {
   touchList: ArrayLike<Touch> = [];
   picked: Touch | undefined;
 
-  private pickTimeoutId: number | undefined;
-  private resetTimeoutId: number | undefined;
+  private pickTimeoutId: ReturnType<typeof setTimeout> | undefined;
+  private resetTimeoutId: ReturnType<typeof setTimeout> | undefined;
 
   /**
    * Update the list of fingers to display.
