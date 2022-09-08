@@ -10,39 +10,48 @@
 @keyframes pulse {
   0%,
   100% {
-    scale: 100%;
+    scale: 1;
   }
   50% {
-    scale: 125%;
+    scale: 1.25;
   }
 }
 
-.finger {
-  --indicator-size: max(50px, var(--size, 0px));
-  width: var(--indicator-size);
-  height: var(--indicator-size);
-
-  border-radius: 50%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-color: currentColor;
-
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-.finger::before {
-  content: "";
+.finger,
+.finger::before,
+.finger::after {
   display: block;
   position: absolute;
   border-radius: 50%;
+}
+.finger {
+  width: 0;
+  height: 0;
+  top: 0;
+  left: 0;
+
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  transition: translate 0.1s ease-in-out;
+  --indicator-radius: 25px;
+}
+.finger::before {
+  content: "";
+  background-color: currentColor;
+  top: calc(var(--indicator-radius) * -1);
+  left: calc(var(--indicator-radius) * -1);
+  right: calc(var(--indicator-radius) * -1);
+  bottom: calc(var(--indicator-radius) * -1);
+}
+.finger::after {
+  content: "";
   border: currentColor 10px solid;
-  top: -20px;
-  left: -20px;
-  right: -20px;
-  bottom: -20px;
+  top: calc(calc(var(--indicator-radius) + 20px) * -1);
+  left: calc(calc(var(--indicator-radius) + 20px) * -1);
+  right: calc(calc(var(--indicator-radius) + 20px) * -1);
+  bottom: calc(calc(var(--indicator-radius) + 20px) * -1);
 }
 
-.finger--spin::before {
+.finger--spin::after {
   clip-path: polygon(50% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 50%, 50% 50%);
   animation: spin 1s linear infinite;
 }

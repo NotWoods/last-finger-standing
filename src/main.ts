@@ -1,54 +1,69 @@
 import "./style.css";
 import "./animation.css";
+import { colors } from "./colors";
 
 const arena = document.getElementById("arena")!;
+
+interface Indicator {
+  readonly clientX: number;
+  readonly clientY: number;
+}
 
 class TouchIndicator {
   readonly element: HTMLElement;
 
-  constructor() {
+  constructor(color: string) {
     this.element = document.createElement("div");
     this.element.classList.add("finger", "finger--spin");
-    this.element.style.setProperty("--color", `blue`);
+    this.element.style.setProperty("color", color);
   }
 
-  updatePosition(touch: Touch) {
+  updatePosition(touch: Indicator) {
     this.element.style.setProperty(
-      "--size",
-      `${Math.max(touch.radiusX, touch.radiusY)}px`
-    );
-    this.element.style.setProperty(
-      "transform",
+      "translate",
       `${touch.clientX}px ${touch.clientY}px`
     );
   }
 }
 
+class IndicatorManager {
+  indicators = new Map<number, TouchIndicator>();
+  i = 0;
+
+  getOrCreateIndicator(identifier: number) {
+    return this.indicators.get(identifier) ?? this.addIndicator(identifier);
+  }
+
+  addIndicator(identifier: number) {
+    const indicator = new TouchIndicator(colors[this.i % colors.length]);
+    this.i++;
+
+    this.indicators.set(identifier, indicator);
+    arena.append(indicator.element);
+    return indicator;
+  }
+
+  removeIndicator(identifier: number) {
+    const indicator = this.indicators.get(identifier);
+    indicator?.element.remove();
+    return this.indicators.delete(identifier);
+  }
+}
+
 let touchList: ArrayLike<Touch> = [];
 {
-  const indicators = new Map<Touch["identifier"], TouchIndicator>();
+  const manager = new IndicatorManager();
   function renderTouches() {
-    const notSeen = new Set(indicators.keys());
+    const notSeen = new Set(manager.indicators.keys());
     for (let i = 0; i < touchList.length; i++) {
       const touch = touchList[i];
 
-      let indicator = indicators.get(touch.identifier);
-      if (!indicator) {
-        indicator = new TouchIndicator();
-        indicators.set(touch.identifier, indicator);
-        arena.append(indicator.element);
-      }
-
-      indicator.updatePosition(touch);
+      manager.getOrCreateIndicator(touch.identifier).updatePosition(touch);
       notSeen.delete(touch.identifier);
     }
 
     for (const identifier of notSeen) {
-      const indicator = indicators.get(identifier);
-      if (indicator) {
-        indicators.delete(identifier);
-        indicator.element.remove();
-      }
+      manager.removeIndicator(identifier);
     }
 
     requestAnimationFrame(renderTouches);
@@ -56,12 +71,11 @@ let touchList: ArrayLike<Touch> = [];
   renderTouches();
 }
 
-arena.addEventListener("touchstart", (event) => {
+function updateAllTouches(event: TouchEvent) {
+  event.preventDefault();
   touchList = event.targetTouches;
-});
-arena.addEventListener("touchmove", (event) => {
-  touchList = event.targetTouches;
-});
-arena.addEventListener("touchend", (event) => {
-  touchList = event.targetTouches;
-});
+}
+
+arena.addEventListener("touchstart", updateAllTouches);
+arena.addEventListener("touchmove", updateAllTouches);
+arena.addEventListener("touchend", updateAllTouches);
