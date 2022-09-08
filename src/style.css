@@ -1,5 +1,5 @@
 :root {
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Inter, Avenir, system-ui, Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 24px;
   font-weight: 400;
@@ -19,18 +19,38 @@ header {
 }
 
 .icon-button {
+  position: relative;
   border: 0;
   border-radius: 1000px;
-  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   row-gap: 8px;
   min-height: 40px;
-  padding-left: 16px;
-  padding-right: 24px;
+  padding-block: 0;
+  padding-inline-start: 16px;
+  padding-inline-end: 24px;
   font-weight: 500;
+  color: #e8def8;
+  background-color: #4a4458;
+}
+.icon-button::after {
+  content: "";
+  display: block;
+  position: absolute;
+  inset: 0;
+  border-radius: 1000px;
+  transition: opacity 0.2s ease-in-out;
+  opacity: 0;
+  background-color: #e8def8;
+}
+.icon-button:hover::after {
+  opacity: 0.08;
+}
+.icon-button:focus-visible::after,
+.icon-button:active::after {
+  opacity: 0.12;
 }
 
 .fullscreen-button::before {
@@ -42,6 +62,7 @@ header {
   background-size: 48px 24px;
   background-position: right center;
 }
-.fullscreen-button::before:fullscreen {
+.fullscreen-button:fullscreen::before,
+.fullscreen-button[aria-pressed="true"]::before {
   background-position: left center;
 }
