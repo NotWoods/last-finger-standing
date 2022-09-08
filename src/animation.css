@@ -31,7 +31,7 @@
   left: 0;
 
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  transition: translate 0.1s ease-in-out;
+  animation-delay: 300ms;
   --indicator-radius: 25px;
 }
 .finger::before {
@@ -49,9 +49,10 @@
   left: calc(calc(var(--indicator-radius) + 20px) * -1);
   right: calc(calc(var(--indicator-radius) + 20px) * -1);
   bottom: calc(calc(var(--indicator-radius) + 20px) * -1);
+
+  clip-path: polygon(50% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 50%, 50% 50%);
 }
 
 .finger--spin::after {
-  clip-path: polygon(50% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 50%, 50% 50%);
   animation: spin 1s linear infinite;
 }

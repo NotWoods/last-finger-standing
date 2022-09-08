@@ -18,6 +18,18 @@ class TouchIndicator {
     this.element.style.setProperty("color", color);
   }
 
+  animateIn() {
+    return this.element.animate([{ scale: 0 }, { scale: 1 }], {
+      duration: 300,
+    });
+  }
+
+  animateOut() {
+    return this.element.animate([{ scale: 1 }, { scale: 0 }], {
+      duration: 300,
+    });
+  }
+
   updatePosition(touch: Indicator) {
     this.element.style.setProperty(
       "translate",
@@ -40,12 +52,16 @@ class IndicatorManager {
 
     this.indicators.set(identifier, indicator);
     arena.append(indicator.element);
+    indicator.animateIn();
     return indicator;
   }
 
   removeIndicator(identifier: number) {
     const indicator = this.indicators.get(identifier);
-    indicator?.element.remove();
+    if (indicator) {
+      const animation = indicator.animateOut();
+      animation.onfinish = () => indicator.element.remove();
+    }
     return this.indicators.delete(identifier);
   }
 }
