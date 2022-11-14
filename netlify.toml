@@ -17,3 +17,8 @@
   from = "/app.html"
   to = "https://games.tigeroakes.com/last-finger-standing/app"
   status = 301
+
+[[redirects]]
+  from = "/last-finger-standing"
+  to = "https://games.tigeroakes.com/last-finger-standing/"
+  status = 301
