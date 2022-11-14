@@ -68,3 +68,9 @@ header {
 .fullscreen-button[aria-pressed="true"]::before {
   background-position: left center;
 }
+
+@media (display-mode: fullscreen) {
+  .fullscreen-button {
+    display: none;
+  }
+}

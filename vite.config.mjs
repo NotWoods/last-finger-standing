@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
+  base: '/last-finger-standing/',
   server: {
     host: "0.0.0.0",
   },

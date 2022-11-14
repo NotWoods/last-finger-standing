@@ -1,0 +1,19 @@
+[[redirects]]
+  from = "/"
+  to = "https://games.tigeroakes.com/last-finger-standing/"
+  status = 301
+
+[[redirects]]
+  from = "/index.html"
+  to = "https://games.tigeroakes.com/last-finger-standing/"
+  status = 301
+
+[[redirects]]
+  from = "/app"
+  to = "https://games.tigeroakes.com/last-finger-standing/app"
+  status = 301
+
+[[redirects]]
+  from = "/app.html"
+  to = "https://games.tigeroakes.com/last-finger-standing/app"
+  status = 301
