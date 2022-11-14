@@ -143,3 +143,16 @@ body {
 .finger--spin::after {
   animation: clock 1.5s linear forwards, spin 1s linear infinite;
 }
+
+.hint {
+  animation: spin 90s linear infinite;
+  transition: opacity 1s ease;
+  width: min(90vw, calc(90vh - 2.5rem));
+}
+.hint-text {
+  fill: currentColor;
+}
+.hint-text-flipped {
+  transform-origin: center;
+  transform: rotate(180deg);
+}

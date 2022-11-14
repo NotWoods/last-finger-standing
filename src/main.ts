@@ -11,6 +11,7 @@ function randomIndex(length: number) {
 }
 
 const arena = document.getElementById("arena")!;
+const hint = document.getElementById("hint")!;
 
 interface Indicator {
   readonly clientX: number;
@@ -80,12 +81,16 @@ class TouchPicker {
 
   private pickTimeoutId: ReturnType<typeof setTimeout> | undefined;
   private resetTimeoutId: ReturnType<typeof setTimeout> | undefined;
+  private hintTimeoutId: ReturnType<typeof setTimeout> | undefined;
 
   /**
    * Update the list of fingers to display.
    */
   updateList(touchList: ArrayLike<Touch>) {
     this.touchList = touchList;
+    if (this.touchList.length > 0) {
+      hint.classList.add("hidden");
+    }
   }
 
   /**
@@ -113,16 +118,26 @@ class TouchPicker {
     console.log("Reset");
   };
 
+  showHint = () => {
+    hint.classList.remove("hidden");
+  };
+
   resetTimers() {
     clearTimeout(this.pickTimeoutId);
     clearTimeout(this.resetTimeoutId);
+    clearTimeout(this.hintTimeoutId);
 
     if (this.touchList.length > 1) {
       // Automatically pick a finger after 2 seconds
       this.pickTimeoutId = setTimeout(this.pick, 2000);
-    } else if (this.picked && this.touchList.length === 0) {
-      // If all the fingers have been removed, reset the picked finger after 2 seconds
-      this.resetTimeoutId = setTimeout(this.reset, 2000);
+    } else if (this.touchList.length === 0) {
+      if (this.picked) {
+        // If all the fingers have been removed, reset the picked finger after 2 seconds
+        this.resetTimeoutId = setTimeout(this.reset, 2000);
+      }
+
+      // Show the hint again after 8 seconds
+      this.hintTimeoutId = setTimeout(this.showHint, 8000);
     }
   }
 }

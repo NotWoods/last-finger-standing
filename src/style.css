@@ -69,6 +69,20 @@ header {
   background-position: left center;
 }
 
+.hint {
+  position: fixed;
+  top: 3.5rem;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: min(90vw, calc(90vh - 3.5rem));
+  pointer-events: none;
+  font-size: 1.1rem;
+}
+.hidden {
+  opacity: 0;
+}
+
 @media (display-mode: fullscreen) {
   .fullscreen-button {
     display: none;
